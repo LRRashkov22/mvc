@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - Складов инвентар</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <a class="brand" asp-controller="Inventory" asp-action="Index">Складов инвентар</a>
+        <nav>
+            <a asp-controller="Inventory" asp-action="Index">Табло</a>
+            <a asp-controller="Inventory" asp-action="Products">Продукти</a>
+            <a asp-controller="Inventory" asp-action="Categories">Категории</a>
+            <a asp-controller="Inventory" asp-action="Warehouses">Складове</a>
+            <a asp-controller="Inventory" asp-action="Stock">Наличности</a>
+            <a asp-controller="Inventory" asp-action="Deliveries">Доставки</a>
+        </nav>
+    </header>
+
+    <main>
+        @if (TempData["Error"] is string error)
+        {
+            <p class="error">@error</p>
+        }
+        @RenderBody()
+    </main>
+
+    <footer>ASP.NET Core MVC · MS SQL Server</footer>
+</body>
+</html>

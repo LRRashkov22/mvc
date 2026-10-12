@@ -1,0 +1,21 @@
+@model IEnumerable<WarehouseInventoryMvc.Models.Product>
+@{ ViewData["Title"] = "Продукти"; }
+<div class="heading">
+    <h1>Продукти</h1>
+    <a class="button" asp-controller="Inventory" asp-action="CreateProduct">+ Добави</a>
+</div>
+<table>
+    <thead><tr><th>ID</th><th>Име</th><th>Категория</th><th>Цена</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.ProductId</td>
+            <td>@item.Name</td>
+            <td>@item.Category?.Name</td>
+            <td>@item.Price.ToString("0.00")</td>
+            <td><a class="dangerLink" asp-controller="Inventory" asp-action="DeleteProduct" asp-route-id="@item.ProductId">Изтрий</a></td>
+        </tr>
+    }
+    </tbody>
+</table>

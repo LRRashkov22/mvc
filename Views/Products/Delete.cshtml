@@ -1,0 +1,9 @@
+@model WarehouseInventoryMvc.Models.Product
+@{ ViewData["Title"] = "Изтриване на продукт"; }
+<h1>Изтриване на продукт</h1>
+<p>Да изтрия ли продукта „@Model.Name“?</p>
+<form asp-controller="Inventory" asp-action="DeleteProduct" method="post">
+    <input type="hidden" name="id" value="@Model.ProductId" />
+    <button class="button danger" type="submit">Изтрий</button>
+    <a asp-controller="Inventory" asp-action="Products">Отказ</a>
+</form>

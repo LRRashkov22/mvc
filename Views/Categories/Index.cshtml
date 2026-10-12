@@ -1,0 +1,19 @@
+@model IEnumerable<WarehouseInventoryMvc.Models.Category>
+@{ ViewData["Title"] = "Категории"; }
+<div class="heading">
+    <h1>Категории</h1>
+    <a class="button" asp-controller="Inventory" asp-action="CreateCategory">+ Добави</a>
+</div>
+<table>
+    <thead><tr><th>ID</th><th>Име</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.CategoryId</td>
+            <td>@item.Name</td>
+            <td><a class="dangerLink" asp-controller="Inventory" asp-action="DeleteCategory" asp-route-id="@item.CategoryId">Изтрий</a></td>
+        </tr>
+    }
+    </tbody>
+</table>

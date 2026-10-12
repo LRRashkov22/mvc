@@ -1,0 +1,9 @@
+@model WarehouseInventoryMvc.Models.Category
+@{ ViewData["Title"] = "Нова категория"; }
+<h1>Нова категория</h1>
+<form asp-controller="Inventory" asp-action="CreateCategory" method="post" class="form">
+    <label asp-for="Name">Име</label>
+    <input asp-for="Name" />
+    <span asp-validation-for="Name"></span>
+    <button class="button" type="submit">Запази</button>
+</form>
