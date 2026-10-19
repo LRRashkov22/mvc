@@ -1,26 +1,22 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebApplication1.Data;
 using WebApplication1.Models;
+using WebApplication1.Services.Contracts;
 
 namespace WebApplication1.Controllers;
 
 public class CategoriesController : Controller
 {
-    private readonly WarehouseDbContext _context;
+    private readonly ICategoriesService _categoriesService;
 
-    public CategoriesController(WarehouseDbContext context)
+    public CategoriesController(ICategoriesService categoriesService)
     {
-        _context = context;
+        _categoriesService = categoriesService;
     }
 
     // GET: Categories
     public async Task<IActionResult> Index()
     {
-        var categories = await _context.Categories
-            .AsNoTracking()
-            .ToListAsync();
-
+        var categories = await _categoriesService.GetAllAsync();
         return View(categories);
     }
 
@@ -30,9 +26,7 @@ public class CategoriesController : Controller
         if (id == null)
             return NotFound();
 
-        var category = await _context.Categories
-            .AsNoTracking()
-            .FirstOrDefaultAsync(c => c.CategoryId == id);
+        var category = await _categoriesService.GetByIdAsync(id.Value);
 
         if (category == null)
             return NotFound();
@@ -55,8 +49,7 @@ public class CategoriesController : Controller
         if (!ModelState.IsValid)
             return View(category);
 
-        _context.Categories.Add(category);
-        await _context.SaveChangesAsync();
+        await _categoriesService.CreateAsync(category);
 
         return RedirectToAction(nameof(Index));
     }
@@ -67,7 +60,7 @@ public class CategoriesController : Controller
         if (id == null)
             return NotFound();
 
-        var category = await _context.Categories.FindAsync(id);
+        var category = await _categoriesService.GetByIdAsync(id.Value);
 
         if (category == null)
             return NotFound();
@@ -88,22 +81,14 @@ public class CategoriesController : Controller
         if (!ModelState.IsValid)
             return View(category);
 
-        _context.Entry(category).State = EntityState.Modified;
+        var existingCategory = await _categoriesService.GetByIdAsync(id);
 
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!await _context.Categories.AnyAsync(
-                c => c.CategoryId == category.CategoryId))
-            {
-                return NotFound();
-            }
+        if (existingCategory == null)
+            return NotFound();
 
-            throw;
-        }
+        existingCategory.Name = category.Name;
+
+        await _categoriesService.UpdateAsync(existingCategory);
 
         return RedirectToAction(nameof(Index));
     }
@@ -114,9 +99,7 @@ public class CategoriesController : Controller
         if (id == null)
             return NotFound();
 
-        var category = await _context.Categories
-            .AsNoTracking()
-            .FirstOrDefaultAsync(c => c.CategoryId == id);
+        var category = await _categoriesService.GetByIdAsync(id.Value);
 
         if (category == null)
             return NotFound();
@@ -129,13 +112,12 @@ public class CategoriesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var category = await _context.Categories.FindAsync(id);
+        var category = await _categoriesService.GetByIdAsync(id);
 
-        if (category != null)
-        {
-            _context.Categories.Remove(category);
-            await _context.SaveChangesAsync();
-        }
+        if (category == null)
+            return NotFound();
+
+        await _categoriesService.DeleteAsync(id);
 
         return RedirectToAction(nameof(Index));
     }
