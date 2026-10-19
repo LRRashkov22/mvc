@@ -1,9 +1,0 @@
-@model WarehouseInventoryMvc.Models.Category
-@{ ViewData["Title"] = "Изтриване на категория"; }
-<h1>Изтриване на категория</h1>
-<p>Да изтрия ли категорията „@Model.Name“?</p>
-<form asp-controller="Inventory" asp-action="DeleteCategory" method="post">
-    <input type="hidden" name="id" value="@Model.CategoryId" />
-    <button class="button danger" type="submit">Изтрий</button>
-    <a asp-controller="Inventory" asp-action="Categories">Отказ</a>
-</form>

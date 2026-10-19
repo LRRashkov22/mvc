@@ -1,9 +1,0 @@
-@model WarehouseInventoryMvc.Models.Warehouse
-@{ ViewData["Title"] = "Нов склад"; }
-<h1>Нов склад</h1>
-<form asp-controller="Inventory" asp-action="CreateWarehouse" method="post" class="form">
-    <label asp-for="Name">Име</label>
-    <input asp-for="Name" />
-    <span asp-validation-for="Name"></span>
-    <button class="button" type="submit">Запази</button>
-</form>
