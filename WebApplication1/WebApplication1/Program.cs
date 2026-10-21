@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.EntityFrameworkCore;
+using WebApplication1;
 using WebApplication1.Data;
 using WebApplication1.Services.Implementations;
 using WebApplication1.Services.Contracts;
@@ -18,6 +20,7 @@ builder.Services.AddScoped<ICategoriesService, CategoriesService>();
 builder.Services.AddScoped<IDeliveriesService, DeliveriesService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
