@@ -9,7 +9,7 @@ public class WarehouseDbContext : DbContext
         : base(options)
     {
     }
-
+    public DbSet<User> User => Set<User>();
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Product> Products => Set<Product>();
     public DbSet<Warehouse> Warehouses => Set<Warehouse>();
