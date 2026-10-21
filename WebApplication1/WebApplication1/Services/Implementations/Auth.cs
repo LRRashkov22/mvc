@@ -12,7 +12,7 @@ using System.Text;
 using WebApplication1.Data;
 using System.Threading.Tasks;
 using WebApplication1;
-
+using  WebApplication1.Models;
 namespace WebApplication1;
 
 
@@ -22,7 +22,7 @@ public class AuthService(WarehouseDbContext context, IConfiguration configuratio
     public async Task<(User? user, string? error)> RegisterAsync(UserDto request)
     {
         //Username tests
-        if (await context.Users.AnyAsync(u => u.Username == request.Username)) return (null, "User already exists");
+        if (await context.User.AnyAsync(u => u.Username == request.Username)) return (null, "User already exists");
         if (request.Username.Length < 3) return (null, "Username must be at least 3 characters long");
         if (request.Username.Length > 20) return (null, "Username must be maximum 20 characters long");
         if (string.IsNullOrEmpty(request.Username)) return (null, "Username cannot be empty");
@@ -44,7 +44,7 @@ public class AuthService(WarehouseDbContext context, IConfiguration configuratio
         user.PasswordHash = hashedPassword;
         //Default role is User
         user.Role = "User";
-        context.Users.Add(user);
+        context.User.Add(user);
         await context.SaveChangesAsync();
         return (user, null);
     }
@@ -54,7 +54,7 @@ public class AuthService(WarehouseDbContext context, IConfiguration configuratio
     public async Task<(TokenResponseDto? tokenRespone, string? error)> LoginAsync(UserDto request)
     {
 
-        var user = await context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+        var user = await context.User.FirstOrDefaultAsync(u => u.Username == request.Username);
         if (user is null)
         {
             return (null, "User not found");
@@ -115,7 +115,7 @@ public class AuthService(WarehouseDbContext context, IConfiguration configuratio
 
     private async Task<User?> ValidateRefreshTokenAsync(Guid userId, string refreshToken)
     {
-        var user = await context.Users.FindAsync(userId);
+        var user = await context.User.FindAsync(userId);
         if (user is null || user.RefreshToken != refreshToken
             || user.RefreshTokenExpiryTime <= DateTime.UtcNow) return null;
         return user;
