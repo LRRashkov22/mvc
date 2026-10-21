@@ -16,6 +16,8 @@ builder.Services.AddDbContext<WarehouseDbContext>(options =>
 // Register application services for dependency injection
 builder.Services.AddScoped<ICategoriesService, CategoriesService>();
 builder.Services.AddScoped<IDeliveriesService, DeliveriesService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IInventoryService, InventoryService>();
 
 var app = builder.Build();
 
