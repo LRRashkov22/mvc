@@ -22,8 +22,18 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("frontend",
+        policy => policy
+            .WithOrigins("*")
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
+
 var app = builder.Build();
 app.MapScalarApiReference();
+app.UseCors("frontend");
 // Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
