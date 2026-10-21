@@ -4,7 +4,7 @@ using WebApplication1;
 using WebApplication1.Data;
 using WebApplication1.Services.Implementations;
 using WebApplication1.Services.Contracts;
-
+using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add MVC services
@@ -23,7 +23,7 @@ builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
-
+app.MapScalarApiReference();
 // Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
