@@ -12,14 +12,22 @@ public sealed class InventoryRepository : IInventoryRepository
 
     public async Task<IReadOnlyList<InventoryItem>> GetAllAsync(int? productId = null, int? warehouseId = null, CancellationToken ct = default)
     {
-        var query = _db.Inventory.AsNoTracking().AsQueryable();
+        var query = _db.Inventory.AsNoTracking()
+            .Include(x => x.Product)
+                .ThenInclude(p => p!.Category)
+            .Include(x => x.Warehouse)
+            .AsQueryable();
         if (productId.HasValue) query = query.Where(x => x.ProductId == productId.Value);
         if (warehouseId.HasValue) query = query.Where(x => x.WarehouseId == warehouseId.Value);
         return await query.OrderBy(x => x.WarehouseId).ThenBy(x => x.ProductId).ToListAsync(ct);
     }
 
     public Task<InventoryItem?> GetByIdAsync(int productId, int warehouseId, CancellationToken ct = default) =>
-        _db.Inventory.AsNoTracking().FirstOrDefaultAsync(x => x.ProductId == productId && x.WarehouseId == warehouseId, ct);
+        _db.Inventory.AsNoTracking()
+            .Include(x => x.Product)
+                .ThenInclude(p => p!.Category)
+            .Include(x => x.Warehouse)
+            .FirstOrDefaultAsync(x => x.ProductId == productId && x.WarehouseId == warehouseId, ct);
 
     public Task<InventoryItem?> GetTrackedByIdAsync(int productId, int warehouseId, CancellationToken ct = default) =>
         _db.Inventory.FirstOrDefaultAsync(x => x.ProductId == productId && x.WarehouseId == warehouseId, ct);

@@ -1,0 +1,46 @@
+@model WebApplication1.UserDto
+@{
+    Layout = null;
+    ViewData["Title"] = "Create account";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create account · Stockroom</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        body { min-height: 100vh; display: grid; place-items: center; background: #f5f7fb; padding: 24px; }
+        .auth-card { width: min(100%, 440px); padding: 36px; background: #fff; border: 1px solid #e7eaf0; border-radius: 18px; box-shadow: 0 18px 50px rgba(24,39,75,.08); }
+        .auth-brand { font-size: 22px; font-weight: 800; letter-spacing: -.5px; margin-bottom: 28px; }
+        .auth-brand span { display: inline-grid; place-items: center; width: 38px; height: 38px; margin-right: 10px; border-radius: 12px; background: #1f3a5f; color: white; }
+        .auth-muted { color: #6b7280; }
+    </style>
+</head>
+<body>
+<main class="auth-card">
+    <div class="auth-brand"><span>S</span>stockroom</div>
+    <h1 class="h3 mb-2">Create your account</h1>
+    <p class="auth-muted mb-4">Create a user account to access Stockroom.</p>
+    <form asp-action="Register" method="post">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+        <div class="mb-3">
+            <label asp-for="Username" class="form-label">Username</label>
+            <input asp-for="Username" class="form-control" autocomplete="username" minlength="3" maxlength="20" pattern="[A-Za-z]{3,20}" required />
+            <div class="form-text">Use 3–20 letters, without spaces or numbers.</div>
+            <span asp-validation-for="Username" class="text-danger"></span>
+        </div>
+        <div class="mb-4">
+            <label asp-for="Password" class="form-label">Password</label>
+            <input asp-for="Password" type="password" class="form-control" autocomplete="new-password" minlength="8" maxlength="30" required />
+            <div class="form-text">Use 8–30 characters with uppercase, lowercase, number and symbol.</div>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Create account</button>
+    </form>
+    <p class="text-center auth-muted mt-4 mb-0">Already registered? <a asp-controller="Account" asp-action="Login">Sign in</a></p>
+</main>
+</body>
+</html>

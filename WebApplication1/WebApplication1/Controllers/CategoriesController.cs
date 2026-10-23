@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models;
 using WebApplication1.Services.Contracts;
 
 namespace WebApplication1.Controllers;
 
+[Authorize]
 public class CategoriesController : Controller
 {
     private readonly ICategoriesService _categoriesService;
@@ -117,8 +119,15 @@ public class CategoriesController : Controller
         if (category == null)
             return NotFound();
 
-        await _categoriesService.DeleteAsync(id);
-
-        return RedirectToAction(nameof(Index));
+        try
+        {
+            await _categoriesService.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (InvalidOperationException ex)
+        {
+            TempData["Error"] = ex.Message;
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

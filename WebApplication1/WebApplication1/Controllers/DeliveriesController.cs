@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models;
@@ -5,6 +6,7 @@ using WebApplication1.Services.Contracts;
 
 namespace WebApplication1.Controllers;
 
+[Authorize]
 public class DeliveriesController : Controller
 {
     private readonly IDeliveriesService _deliveriesService;

@@ -93,6 +93,7 @@ public sealed class AuthService(IUserRepository users, IConfiguration configurat
         await users.SaveChangesAsync();
         return new TokenResponseDto
         {
+            UserId = user.Id,
             AccessToken = CreateToken(user),
             RefreshToken = user.RefreshToken
         };

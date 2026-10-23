@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -8,21 +9,23 @@ using WebApplication1.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
-using WebApplication1.Services;
 namespace Personal_Finance_Tracker.Controller;
 
 [Route("api/[controller]")]
 [ApiController]
 
 public class AuthController(IAuthService AuthService) : ControllerBase {
-    public static User user = new();
-
     [HttpPost("register")]
-    public async Task<ActionResult<User>> Register(UserDto request) {
+    public async Task<IActionResult> Register(UserDto request) {
         var (user,error) = await AuthService.RegisterAsync(request);
         if (error != null) return BadRequest(error);
 
-        return Ok(user);
+        return Ok(new
+        {
+            user.Id,
+            user.Username,
+            user.Role
+        });
     }
 
     [HttpPost("login")]
@@ -33,13 +36,13 @@ public class AuthController(IAuthService AuthService) : ControllerBase {
         return Ok(result);
     }
 
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet]
     public IActionResult AuthenticatedOnlyEndpoint() { 
         return Ok("You are authenticated and can access this endpoint.");
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
     [HttpGet("Admin-only")]
     public IActionResult AdminOnlyEndpoint ()
     {

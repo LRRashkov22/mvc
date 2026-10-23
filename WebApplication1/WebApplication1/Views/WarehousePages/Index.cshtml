@@ -1,0 +1,32 @@
+@model IEnumerable<WebApplication1.Models.Warehouse>
+@{
+    ViewData["Title"] = "Warehouses";
+}
+<div class="page-heading">
+    <div><h1>Warehouses</h1><p>Manage the storage locations used by your inventory.</p></div>
+    <a class="btn btn-primary" asp-action="Create">＋ Add warehouse</a>
+</div>
+<div class="panel">
+    <div class="table-responsive">
+        <table class="table">
+            <thead><tr><th>ID</th><th>Warehouse name</th><th></th></tr></thead>
+            <tbody>
+            @foreach (var warehouse in Model)
+            {
+                <tr>
+                    <td>#@warehouse.WarehouseId</td>
+                    <td class="primary-text">@warehouse.Name</td>
+                    <td><div class="action-links">
+                        <a class="btn btn-light btn-sm" asp-action="Edit" asp-route-id="@warehouse.WarehouseId">Edit</a>
+                        <a class="btn btn-light btn-sm" asp-action="Delete" asp-route-id="@warehouse.WarehouseId">Delete</a>
+                    </div></td>
+                </tr>
+            }
+            @if (!Model.Any())
+            {
+                <tr><td colspan="3"><div class="empty-state"><strong>No warehouses yet</strong>Create a warehouse before adding inventory records.</div></td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

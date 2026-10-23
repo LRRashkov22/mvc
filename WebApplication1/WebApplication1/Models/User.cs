@@ -6,8 +6,8 @@ public class User
     public int Id { get; set; }
     [Required]
     [Length(3, 20)]
-    [RegularExpression(@"^[a-zA-Z]$",
-        ErrorMessage = "Characters are not allowed.")]
+    [RegularExpression(@"^[a-zA-Z]{3,20}$",
+        ErrorMessage = "Username must contain 3 to 20 letters only.")]
     public string Username { get; set; } = string.Empty;
     [Required]
     [Length(8, 30)]

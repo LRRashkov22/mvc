@@ -1,0 +1,19 @@
+@model WebApplication1.Models.Category
+@{
+    ViewData["Title"] = "Category details";
+}
+<div class="page-heading">
+    <div><h1>Category details</h1><p>Review this product category.</p></div>
+</div>
+<div class="form-card">
+    <dl class="row">
+        <dt class="col-sm-3">ID</dt>
+        <dd class="col-sm-9">@Model.CategoryId</dd>
+        <dt class="col-sm-3">Name</dt>
+        <dd class="col-sm-9">@Model.Name</dd>
+    </dl>
+    <div class="form-actions">
+        <a asp-action="Edit" asp-route-id="@Model.CategoryId" class="btn btn-primary">Edit</a>
+        <a asp-action="Index" class="btn btn-light">Back to categories</a>
+    </div>
+</div>
