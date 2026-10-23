@@ -5,6 +5,9 @@ using WebApplication1.Data;
 using WebApplication1.Services.Implementations;
 using WebApplication1.Services.Contracts;
 using Scalar.AspNetCore;
+using WebApplication1.Repositories.Implementations;
+using WebApplication1.Repositories.Contracts;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add MVC services
@@ -22,6 +25,9 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
 
 builder.Services.AddCors(options =>
 {
@@ -42,17 +48,17 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseRouting();
 
-//app.UseAuthorization();
+app.UseAuthorization();
 
-app.MapStaticAssets();
+app.MapStaticAssets();  
 
 app.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}")
+        pattern: "{controller=Login}/{action=login}")
     .WithStaticAssets();
 
 app.Run();

@@ -1,62 +1,42 @@
-namespace WebApplication1.Services.Implementations;
-
-
-using Microsoft.EntityFrameworkCore;
-using WebApplication1.Data;
 using WebApplication1.Models;
+using WebApplication1.Repositories.Contracts;
 using WebApplication1.Services.Contracts;
 
-public class CategoriesService : ICategoriesService
+namespace WebApplication1.Services.Implementations;
+
+public sealed class CategoriesService : ICategoriesService
 {
-    private readonly WarehouseDbContext _context;
+    private readonly ICategoryRepository _categories;
+    public CategoriesService(ICategoryRepository categories) => _categories = categories;
 
-    public CategoriesService(WarehouseDbContext context)
-    {
-        _context = context;
-    }
+    public async Task<IEnumerable<Category>> GetAllAsync() =>
+        await _categories.GetAllAsync();
 
-    public async Task<IEnumerable<Category>> GetAllAsync()
-    {
-        return await _context.Categories
-            .AsNoTracking()
-            .ToListAsync();
-    }
-
-    public async Task<Category?> GetByIdAsync(int id)
-    {
-        return await _context.Categories
-            .AsNoTracking()
-            .FirstOrDefaultAsync(c => c.CategoryId == id);
-    }
+    public Task<Category?> GetByIdAsync(int id) =>
+        _categories.GetByIdAsync(id);
 
     public async Task CreateAsync(Category category)
     {
-        await _context.Categories.AddAsync(category);
-        await _context.SaveChangesAsync();
+        category.Name = category.Name.Trim();
+        await _categories.AddAsync(category);
+        await _categories.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(Category category)
     {
-        var existingCategory = await _context.Categories
-            .FindAsync(category.CategoryId);
-
-        if (existingCategory == null)
-            return;
-
-        existingCategory.Name = category.Name;
-
-        await _context.SaveChangesAsync();
+        var existing = await _categories.GetTrackedByIdAsync(category.CategoryId);
+        if (existing is null) return;
+        existing.Name = category.Name.Trim();
+        await _categories.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(int id)
     {
-        var category = await _context.Categories
-            .FindAsync(id);
-
-        if (category == null)
-            return;
-
-        _context.Categories.Remove(category);
-        await _context.SaveChangesAsync();
+        var category = await _categories.GetTrackedByIdAsync(id);
+        if (category is null) return;
+        if (await _categories.HasProductsAsync(id))
+            throw new InvalidOperationException("Category has products and cannot be deleted.");
+        await _categories.DeleteAsync(category);
+        await _categories.SaveChangesAsync();
     }
 }
