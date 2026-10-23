@@ -1,0 +1,7 @@
+@model IEnumerable<WebApplication1.Models.Category>
+@{ ViewData["Title"] = "Categories"; }
+<div class="page-heading"><div><h1>Categories</h1><p>Organize your catalog into manageable groups.</p></div><a class="btn btn-primary" asp-action="Create">＋ New category</a></div>
+<div class="panel"><div class="table-responsive"><table class="table"><thead><tr><th>ID</th><th>Category name</th><th></th></tr></thead><tbody>
+@foreach (var item in Model) { <tr><td>#@item.CategoryId</td><td class="primary-text">@item.Name</td><td><div class="action-links"><a class="btn btn-light btn-sm" asp-action="Edit" asp-route-id="@item.CategoryId">Edit</a><a class="btn btn-light btn-sm" asp-action="Delete" asp-route-id="@item.CategoryId">Delete</a></div></td></tr> }
+@if (!Model.Any()) { <tr><td colspan="3"><div class="empty-state"><strong>No categories yet</strong>Create your first category to classify products.</div></td></tr> }
+</tbody></table></div></div>

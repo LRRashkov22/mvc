@@ -1,8 +1,43 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Overview";
+    var lowStock = ViewBag.LowStock as IEnumerable<WebApplication1.Models.InventoryItem> ?? Enumerable.Empty<WebApplication1.Models.InventoryItem>();
+    var recent = ViewBag.RecentDeliveries as IEnumerable<WebApplication1.Models.Delivery> ?? Enumerable.Empty<WebApplication1.Models.Delivery>();
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="page-heading">
+    <div><h1>Good morning.</h1><p>Here is what's happening across your warehouse today.</p></div>
+    <a class="btn btn-primary" asp-controller="InventoryPages" asp-action="Create">＋ Add stock record</a>
+</div>
+<div class="stat-grid">
+    <div class="stat-card"><div class="stat-top">Total products <span class="stat-icon">◇</span></div><div class="stat-number">@ViewBag.ProductCount</div><div class="stat-foot">Products in your catalog</div></div>
+    <div class="stat-card"><div class="stat-top">Stock units <span class="stat-icon">▦</span></div><div class="stat-number">@ViewBag.StockUnits</div><div class="stat-foot">Units across all warehouses</div></div>
+    <div class="stat-card"><div class="stat-top">Categories <span class="stat-icon">▤</span></div><div class="stat-number">@ViewBag.CategoryCount</div><div class="stat-foot">Product classifications</div></div>
+    <div class="stat-card"><div class="stat-top">Warehouses <span class="stat-icon">⌂</span></div><div class="stat-number">@ViewBag.WarehouseCount</div><div class="stat-foot">Registered storage locations</div></div>
+</div>
+<div class="dashboard-grid">
+    <section class="panel">
+        <div class="panel-head"><h2>Low stock alerts</h2><a asp-controller="InventoryPages" asp-action="Index">View inventory →</a></div>
+        <div class="panel-body">
+            @if (!lowStock.Any()) { <div class="empty-state"><strong>All stocked up</strong>No inventory records with five units or fewer.</div> }
+            else {
+                <div class="table-responsive"><table class="table"><thead><tr><th>Product</th><th>Warehouse</th><th>Quantity</th><th>State</th></tr></thead><tbody>
+                @foreach (var item in lowStock) {
+                    <tr><td class="primary-text">@(item.Product?.Name ?? $"Product #{item.ProductId}")</td><td>@(item.Warehouse?.Name ?? $"Warehouse #{item.WarehouseId}")</td><td class="primary-text">@item.Quantity</td><td><span class="pill pill-warning">Low stock</span></td></tr>
+                }
+                </tbody></table></div>
+            }
+        </div>
+    </section>
+    <section class="panel">
+        <div class="panel-head"><h2>Recent deliveries</h2><a asp-controller="Deliveries" asp-action="Index">All deliveries →</a></div>
+        <div class="panel-body">
+            @if (!recent.Any()) { <div class="empty-state"><strong>No deliveries yet</strong>Delivery records will appear here.</div> }
+            else {
+                <div class="table-responsive"><table class="table"><thead><tr><th>Product</th><th>Date</th><th>Quantity</th></tr></thead><tbody>
+                @foreach (var delivery in recent) {
+                    <tr><td class="primary-text">@(delivery.Product?.Name ?? $"Product #{delivery.ProductId}")<div class="section-subtitle">@(delivery.Warehouse?.Name ?? $"Warehouse #{delivery.WarehouseId}")</div></td><td>@delivery.DeliveryDate.ToString("dd MMM yyyy")</td><td><span class="pill">+@delivery.Quantity</span></td></tr>
+                }
+                </tbody></table></div>
+            }
+        </div>
+    </section>
 </div>

@@ -1,0 +1,5 @@
+@model WebApplication1.Models.Category
+@{ ViewData["Title"] = "Edit category"; }
+<div class="page-heading"><div><h1>Edit category</h1><p>Update this category's details.</p></div></div>
+<form asp-action="Edit" method="post" class="form-card"><input type="hidden" asp-for="CategoryId"/><div asp-validation-summary="ModelOnly"></div><div class="mb-3"><label asp-for="Name" class="form-label"></label><input asp-for="Name" class="form-control"/><span asp-validation-for="Name" class="field-validation-error"></span></div><div class="form-actions"><button class="btn btn-primary" type="submit">Save changes</button><a asp-action="Index" class="btn btn-light">Cancel</a></div></form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

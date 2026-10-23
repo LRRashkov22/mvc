@@ -1,0 +1,11 @@
+@model WebApplication1.Models.Delivery
+@{ ViewData["Title"] = "New delivery"; var heading = "Record delivery"; var action = "Create"; var submitText = "Save delivery"; }
+<div class="page-heading"><div><h1>@heading</h1><p>Record the incoming stock delivery details.</p></div></div>
+<form asp-action="@action" method="post" class="form-card"><div asp-validation-summary="ModelOnly"></div>
+@if (Model.DeliveryId != 0) { <input type="hidden" asp-for="DeliveryId"/> }
+<div class="mb-3"><label asp-for="ProductId" class="form-label">Product</label><select asp-for="ProductId" asp-items="ViewBag.ProductId" class="form-select"><option value="">Select product</option></select><span asp-validation-for="ProductId" class="field-validation-error"></span></div>
+<div class="mb-3"><label asp-for="WarehouseId" class="form-label">Warehouse</label><select asp-for="WarehouseId" asp-items="ViewBag.WarehouseId" class="form-select"><option value="">Select warehouse</option></select><span asp-validation-for="WarehouseId" class="field-validation-error"></span></div>
+<div class="mb-3"><label asp-for="Quantity" class="form-label">Quantity received</label><input asp-for="Quantity" type="number" min="1" class="form-control"/><span asp-validation-for="Quantity" class="field-validation-error"></span></div>
+<div class="mb-3"><label asp-for="DeliveryDate" class="form-label">Delivery date</label><input asp-for="DeliveryDate" type="date" class="form-control"/><span asp-validation-for="DeliveryDate" class="field-validation-error"></span></div>
+<div class="form-actions"><button type="submit" class="btn btn-primary">@submitText</button><a asp-action="Index" class="btn btn-light">Cancel</a></div></form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

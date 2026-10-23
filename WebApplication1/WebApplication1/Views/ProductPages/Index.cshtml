@@ -1,0 +1,8 @@
+@model IEnumerable<WebApplication1.Models.Product>
+@{ ViewData["Title"] = "Products"; var categories = ViewBag.CategoryNames as IDictionary<int,string> ?? new Dictionary<int,string>(); }
+<div class="page-heading"><div><h1>Products</h1><p>Manage product names, prices and categories.</p></div><a class="btn btn-primary" asp-action="Create">＋ Add product</a></div>
+<form class="filter-bar" method="get"><input class="form-control" name="search" value="@ViewBag.Search" placeholder="Search products..."/><select class="form-select" name="categoryId" asp-items="ViewBag.Categories"><option value="">All categories</option></select><button class="btn btn-primary" type="submit">Filter</button><a class="btn btn-light" asp-action="Index">Reset</a></form>
+<div class="panel"><div class="table-responsive"><table class="table"><thead><tr><th>Product</th><th>Category</th><th>Price</th><th></th></tr></thead><tbody>
+@foreach (var p in Model) { <tr><td class="primary-text">@p.Name<div class="section-subtitle">SKU #@p.ProductId</div></td><td>@(categories.TryGetValue(p.CategoryId, out var categoryName) ? categoryName : "Uncategorized")</td><td class="primary-text">@p.Price.ToString("C")</td><td><div class="action-links"><a class="btn btn-light btn-sm" asp-action="Edit" asp-route-id="@p.ProductId">Edit</a><a class="btn btn-light btn-sm" asp-action="Delete" asp-route-id="@p.ProductId">Delete</a></div></td></tr> }
+@if (!Model.Any()) { <tr><td colspan="4"><div class="empty-state"><strong>No products found</strong>Try changing your search or add a product.</div></td></tr> }
+</tbody></table></div></div>

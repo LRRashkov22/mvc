@@ -1,0 +1,12 @@
+@model WebApplication1.Models.Product
+@{ ViewData["Title"] = "Edit product"; var heading = "Edit product"; var action = "Edit"; var submitText = "Save changes"; }
+<div class="page-heading"><div><h1>@heading</h1><p>Enter the product details below.</p></div></div>
+<form asp-action="@action" method="post" class="form-card">
+    <div asp-validation-summary="ModelOnly"></div>
+    @if (Model.ProductId != 0) { <input type="hidden" asp-for="ProductId"/> }
+    <div class="mb-3"><label asp-for="Name" class="form-label">Product name</label><input asp-for="Name" class="form-control" placeholder="e.g. Wireless keyboard"/><span asp-validation-for="Name" class="field-validation-error"></span></div>
+    <div class="mb-3"><label asp-for="Price" class="form-label">Unit price</label><input asp-for="Price" class="form-control" type="number" step="0.01" min="0"/><span asp-validation-for="Price" class="field-validation-error"></span></div>
+    <div class="mb-3"><label asp-for="CategoryId" class="form-label">Category</label><select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select"><option value="">Select category</option></select><span asp-validation-for="CategoryId" class="field-validation-error"></span></div>
+    <div class="form-actions"><button class="btn btn-primary" type="submit">@submitText</button><a asp-action="Index" class="btn btn-light">Cancel</a></div>
+</form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

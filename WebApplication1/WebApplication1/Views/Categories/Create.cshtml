@@ -1,0 +1,5 @@
+@model WebApplication1.Models.Category
+@{ ViewData["Title"] = "New category"; }
+<div class="page-heading"><div><h1>Create category</h1><p>Add a new product classification.</p></div></div>
+<form asp-action="Create" method="post" class="form-card"><div asp-validation-summary="ModelOnly"></div><div class="mb-3"><label asp-for="Name" class="form-label">Category name</label><input asp-for="Name" class="form-control" placeholder="e.g. Electronics"/><span asp-validation-for="Name" class="field-validation-error"></span></div><div class="form-actions"><button class="btn btn-primary" type="submit">Create category</button><a asp-action="Index" class="btn btn-light">Cancel</a></div></form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

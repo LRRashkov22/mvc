@@ -1,0 +1,7 @@
+@model IEnumerable<WebApplication1.Models.Delivery>
+@{ ViewData["Title"] = "Deliveries"; }
+<div class="page-heading"><div><h1>Deliveries</h1><p>Track incoming goods and delivery history.</p></div><a class="btn btn-primary" asp-action="Create">＋ Record delivery</a></div>
+<div class="panel"><div class="table-responsive"><table class="table"><thead><tr><th>Delivery</th><th>Product</th><th>Warehouse</th><th>Date</th><th>Quantity</th><th></th></tr></thead><tbody>
+@foreach (var d in Model) { <tr><td>#@d.DeliveryId</td><td class="primary-text">@(d.Product?.Name ?? $"Product #{d.ProductId}")</td><td>@(d.Warehouse?.Name ?? $"Warehouse #{d.WarehouseId}")</td><td>@d.DeliveryDate.ToString("dd MMM yyyy")</td><td><span class="pill">+@d.Quantity units</span></td><td><div class="action-links"><a class="btn btn-light btn-sm" asp-action="Details" asp-route-id="@d.DeliveryId">Details</a><a class="btn btn-light btn-sm" asp-action="Edit" asp-route-id="@d.DeliveryId">Edit</a><a class="btn btn-light btn-sm" asp-action="Delete" asp-route-id="@d.DeliveryId">Delete</a></div></td></tr> }
+@if (!Model.Any()) { <tr><td colspan="6"><div class="empty-state"><strong>No deliveries recorded</strong>Record an incoming delivery to see it here.</div></td></tr> }
+</tbody></table></div></div>

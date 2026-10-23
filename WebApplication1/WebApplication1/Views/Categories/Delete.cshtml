@@ -1,0 +1,4 @@
+@model WebApplication1.Models.Category
+@{ ViewData["Title"] = "Delete category"; }
+<div class="page-heading"><div><h1>Delete category</h1><p>Confirm that you want to remove this category.</p></div></div>
+<div class="form-card"><p>Delete category <strong>@Model.Name</strong>?</p><p class="muted">If products reference this category, the database may reject the deletion.</p><form asp-action="Delete" method="post"><input type="hidden" asp-for="CategoryId" name="id"/><div class="form-actions"><button type="submit" class="btn btn-danger">Delete category</button><a asp-action="Index" class="btn btn-light">Cancel</a></div></form></div>

@@ -1,0 +1,4 @@
+@model WebApplication1.Models.Product
+@{ ViewData["Title"] = "Delete product"; }
+<div class="page-heading"><div><h1>Delete product</h1><p>Review the product before deleting it.</p></div></div>
+<div class="form-card"><p>Delete <strong>@Model.Name</strong> priced at <strong>@Model.Price.ToString("C")</strong>?</p><p class="muted">Products referenced by stock or delivery records cannot be deleted.</p><form asp-action="Delete" method="post"><input type="hidden" name="id" value="@Model.ProductId"/><div class="form-actions"><button class="btn btn-danger" type="submit">Delete product</button><a asp-action="Index" class="btn btn-light">Cancel</a></div></form></div>

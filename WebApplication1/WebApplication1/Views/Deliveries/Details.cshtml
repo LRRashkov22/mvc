@@ -1,0 +1,4 @@
+@model WebApplication1.Models.Delivery
+@{ ViewData["Title"] = "Delivery details"; }
+<div class="page-heading"><div><h1>Delivery #@Model.DeliveryId</h1><p>Delivery record details.</p></div><a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.DeliveryId">Edit delivery</a></div>
+<div class="form-card"><dl class="row mb-0"><dt class="col-sm-4 form-label">Product</dt><dd class="col-sm-8">@(Model.Product?.Name ?? $"Product #{Model.ProductId}")</dd><dt class="col-sm-4 form-label">Warehouse</dt><dd class="col-sm-8">@(Model.Warehouse?.Name ?? $"Warehouse #{Model.WarehouseId}")</dd><dt class="col-sm-4 form-label">Quantity</dt><dd class="col-sm-8">@Model.Quantity units</dd><dt class="col-sm-4 form-label">Delivery date</dt><dd class="col-sm-8">@Model.DeliveryDate.ToString("dd MMMM yyyy")</dd></dl><div class="form-actions"><a asp-action="Index" class="btn btn-light">Back to deliveries</a></div></div>

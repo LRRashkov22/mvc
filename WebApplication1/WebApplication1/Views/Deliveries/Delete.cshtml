@@ -1,0 +1,4 @@
+@model WebApplication1.Models.Delivery
+@{ ViewData["Title"] = "Delete delivery"; }
+<div class="page-heading"><div><h1>Delete delivery</h1><p>Confirm removal of this delivery record.</p></div></div>
+<div class="form-card"><p>Delete delivery <strong>#@Model.DeliveryId</strong> for <strong>@(Model.Product?.Name ?? $"Product #{Model.ProductId}")</strong>?</p><p class="muted">This removes the delivery history record.</p><form asp-action="Delete" method="post"><input type="hidden" name="id" value="@Model.DeliveryId"/><div class="form-actions"><button type="submit" class="btn btn-danger">Delete delivery</button><a asp-action="Index" class="btn btn-light">Cancel</a></div></form></div>
