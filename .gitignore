@@ -83,7 +83,6 @@ appsettings.*.local.json
 # User-uploaded and generated files
 # ---------------------------------------------------------
 wwwroot/uploads/
-wwwroot/lib/
 App_Data/
 *.log
 
