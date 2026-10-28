@@ -1,5 +1,156 @@
+# ---------------------------------------------------------
+# Build output
+# ---------------------------------------------------------
 **/bin/
 **/obj/
-.vs/
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Ll]og/
+[Ll]ogs/
+artifacts/
+publish/
+PublishScripts/
+*.publish.xml
+*.pubxml
+*.pubxml.user
+
+# ---------------------------------------------------------
+# Databases (SQLite and local databases)
+# ---------------------------------------------------------
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
+*.sqlite
+*.sqlite3
+*.sqlite-shm
+*.sqlite-wal
+*.mdf
+*.ldf
+*.ndf
+*.sdf
+*.bak
+
+# ---------------------------------------------------------
+# IDE: JetBrains Rider / IntelliJ
+# ---------------------------------------------------------
 .idea/
+*.iml
+*.ipr
+*.iws
+.idea_modules/
+*.sln.iml
+
+# ---------------------------------------------------------
+# IDE: Visual Studio
+# ---------------------------------------------------------
+.vs/
+*.suo
 *.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.rsuser
+*.DotSettings.user
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.sln.ide
+.vscode/
+*.code-workspace
+
+# ---------------------------------------------------------
+# Secrets and local configuration
+# ---------------------------------------------------------
+secrets.json
+appsettings.Local.json
+appsettings.*.local.json
+.env
+.env.*
+*.pfx
+*.key
+*.pem
+
+# ---------------------------------------------------------
+# User-uploaded and generated files
+# ---------------------------------------------------------
+wwwroot/uploads/
+wwwroot/lib/
+App_Data/
+*.log
+
+# ---------------------------------------------------------
+# NuGet
+# ---------------------------------------------------------
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+.nuget/
+
+# ---------------------------------------------------------
+# Node / frontend tooling (if you use npm, Vite, etc.)
+# ---------------------------------------------------------
+node_modules/
+npm-debug.log*
+yarn-error.log
+.angular/
+dist/
+
+# ---------------------------------------------------------
+# Tests, coverage, profiling
+# ---------------------------------------------------------
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+*.coverage
+*.coveragexml
+coverage*.json
+coverage*.xml
+coverage*.info
+TestResults/
+BenchmarkDotNet.Artifacts/
+*.VisualState.xml
+*.dotCover
+*.psess
+*.vsp
+*.vspx
+
+# ---------------------------------------------------------
+# Compiler and tooling leftovers
+# ---------------------------------------------------------
+*.pdb
+*.cache
+*.tmp
+*.temp
+*.tlog
+*.vspscc
+*.vssscc
+*.pidb
+*.svclog
+*.scc
+.localhistory/
+.history/
+.ionide/
+.fake/
+
+# ---------------------------------------------------------
+# OS files
+# ---------------------------------------------------------
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*~

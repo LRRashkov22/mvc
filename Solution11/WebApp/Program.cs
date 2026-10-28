@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1;
 using WebApplication1.Data;
@@ -18,6 +18,23 @@ builder.Services.AddDbContext<WarehouseDbContext>(options =>
     options.UseSqlite(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// OpenAPI document generation (served at /openapi/v1.json)
+builder.Services.AddOpenApi();
+
+// Cookie authentication (used by AccountController.Login)
+builder.Services
+    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.LogoutPath = "/Account/Logout";
+        options.AccessDeniedPath = "/Account/AccessDenied";
+        options.ExpireTimeSpan = TimeSpan.FromHours(8);
+        options.SlidingExpiration = true;
+    });
+
+builder.Services.AddAuthorization();
+
 // Register application services for dependency injection
 builder.Services.AddScoped<ICategoriesService, CategoriesService>();
 builder.Services.AddScoped<IDeliveriesService, DeliveriesService>();
@@ -34,7 +51,6 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>();
 
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("frontend",
@@ -45,8 +61,9 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
-app.MapScalarApiReference();
+
 app.UseCors("frontend");
+
 // Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
@@ -60,11 +77,14 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapStaticAssets();  
+app.MapStaticAssets();
+
+app.MapOpenApi();            // serves /openapi/v1.json
+app.MapScalarApiReference(); // UI at /scalar
 
 app.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Auth}/{action=login}/{id?}")
+        pattern: "{controller=Account}/{action=Login}/{id?}")
     .WithStaticAssets();
 
 app.Run();
