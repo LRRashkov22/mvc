@@ -12,6 +12,7 @@ public class WarehouseDbContext : DbContext
     public DbSet<User> User => Set<User>();
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Product> Products => Set<Product>();
+    public DbSet<ProductImage> ProductImages => Set<ProductImage>();
     public DbSet<Warehouse> Warehouses => Set<Warehouse>();
     public DbSet<InventoryItem> Inventory => Set<InventoryItem>();
     public DbSet<Delivery> Deliveries => Set<Delivery>();
@@ -34,6 +35,23 @@ public class WarehouseDbContext : DbContext
             entity.HasOne(x => x.Category)
                 .WithMany(x => x.Products)
                 .HasForeignKey(x => x.CategoryId);
+        });
+
+        modelBuilder.Entity<ProductImage>(entity =>
+        {
+            entity.ToTable("ProductImages");
+            entity.HasKey(x => x.ProductImageId);
+            entity.Property(x => x.FileName).HasMaxLength(64).IsRequired();
+            entity.Property(x => x.ThumbFileName).HasMaxLength(64).IsRequired();
+            entity.Property(x => x.OriginalFileName).HasMaxLength(100);
+            entity.HasIndex(x => x.ProductId);
+
+            // No back-navigation on ProductImage, which avoids JSON serialization cycles.
+            // Deleting a product also deletes its image rows (the files are removed by ProductService).
+            entity.HasOne<Product>()
+                .WithMany(p => p.Images)
+                .HasForeignKey(x => x.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<Warehouse>(entity =>

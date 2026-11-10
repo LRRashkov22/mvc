@@ -18,4 +18,5 @@ public class Product
 
     public ICollection<InventoryItem> InventoryItems { get; set; } = new List<InventoryItem>();
     public ICollection<Delivery> Deliveries { get; set; } = new List<Delivery>();
+    public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
 }

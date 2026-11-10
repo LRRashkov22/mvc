@@ -1,4 +1,28 @@
 @model WebApplication1.Models.Product
 @{ ViewData["Title"] = "Delete product"; }
 <div class="page-heading"><div><h1>Delete product</h1><p>Review the product before deleting it.</p></div></div>
-<div class="form-card"><p>Delete <strong>@Model.Name</strong> priced at <strong>@Model.Price.ToString("C")</strong>?</p><p class="muted">Products referenced by stock or delivery records cannot be deleted.</p><form asp-action="Delete" method="post"><input type="hidden" name="id" value="@Model.ProductId"/><div class="form-actions"><button class="btn btn-danger" type="submit">Delete product</button><a asp-action="Index" class="btn btn-light">Cancel</a></div></form></div>
+<div class="form-card">
+    <p>Delete <strong>@Model.Name</strong> priced at <strong>@Model.Price.ToString("C")</strong>?</p>
+    <p class="muted">Products referenced by stock or delivery records cannot be deleted.</p>
+
+    @if (Model.Images.Any())
+    {
+        <p class="muted">The @Model.Images.Count image(s) below will also be permanently deleted.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem">
+            @foreach (var img in Model.Images.OrderBy(i => i.UploadedAtUtc))
+            {
+                <img src="@Url.Action("Media", "ProductImages", new { productId = img.ProductId, fileName = img.ThumbFileName })"
+                     alt="@img.OriginalFileName" loading="lazy"
+                     style="width:72px;height:72px;object-fit:cover;border-radius:6px" />
+            }
+        </div>
+    }
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" name="id" value="@Model.ProductId"/>
+        <div class="form-actions">
+            <button class="btn btn-danger" type="submit">Delete product</button>
+            <a asp-action="Index" class="btn btn-light">Cancel</a>
+        </div>
+    </form>
+</div>

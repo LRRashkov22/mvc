@@ -102,6 +102,49 @@ namespace WebApp.Migrations
                     b.ToTable("Products", (string)null);
                 });
 
+            modelBuilder.Entity("WebApplication1.Models.ProductImage", b =>
+                {
+                    b.Property<int>("ProductImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Height")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("OriginalFileName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("SizeBytes")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ThumbFileName")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UploadedAtUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Width")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ProductImageId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages", (string)null);
+                });
+
             modelBuilder.Entity("WebApplication1.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -196,6 +239,15 @@ namespace WebApp.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("WebApplication1.Models.ProductImage", b =>
+                {
+                    b.HasOne("WebApplication1.Models.Product", null)
+                        .WithMany("Images")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("WebApplication1.Models.Category", b =>
                 {
                     b.Navigation("Products");
@@ -204,6 +256,8 @@ namespace WebApp.Migrations
             modelBuilder.Entity("WebApplication1.Models.Product", b =>
                 {
                     b.Navigation("Deliveries");
+
+                    b.Navigation("Images");
 
                     b.Navigation("InventoryItems");
                 });

@@ -1,5 +1,14 @@
 @model WebApplication1.Models.Product
-@{ ViewData["Title"] = "Edit product"; var heading = "Edit product"; var action = "Edit"; var submitText = "Save changes"; }
+@{
+    ViewData["Title"] = "Edit product";
+    var heading = "Edit product";
+    var action = "Edit";
+    var submitText = "Save changes";
+
+    // Where the image upload/remove actions send the user back to
+    var returnUrl = Url.Action("Edit", new { id = Model.ProductId });
+    var images = Model.Images.OrderBy(i => i.UploadedAtUtc).ToList();
+}
 <div class="page-heading"><div><h1>@heading</h1><p>Enter the product details below.</p></div></div>
 <form asp-action="@action" method="post" class="form-card">
     <div asp-validation-summary="ModelOnly"></div>
@@ -9,4 +18,53 @@
     <div class="mb-3"><label asp-for="CategoryId" class="form-label">Category</label><select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select"><option value="">Select category</option></select><span asp-validation-for="CategoryId" class="field-validation-error"></span></div>
     <div class="form-actions"><button class="btn btn-primary" type="submit">@submitText</button><a asp-action="Index" class="btn btn-light">Cancel</a></div>
 </form>
+
+@* ---------- Product images (separate forms, must stay outside the edit form above) ---------- *@
+<div class="form-card" style="margin-top:1.5rem">
+    <h2 class="h5">Product images</h2>
+    <p class="muted">JPG, PNG or WebP, up to 5 MB each. Images are resized and compressed automatically.</p>
+
+    @if (TempData["ImageSuccess"] is string okMessage)
+    {
+        <div class="alert alert-success">@okMessage</div>
+    }
+    @if (TempData["ImageError"] is string errorMessage)
+    {
+        <div class="alert alert-danger">@errorMessage</div>
+    }
+
+    @if (images.Count == 0)
+    {
+        <p class="muted">No images yet.</p>
+    }
+    else
+    {
+        <div style="display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:1rem">
+            @foreach (var img in images)
+            {
+                <div style="text-align:center">
+                    <a href="@Url.Action("Media", "ProductImages", new { productId = img.ProductId, fileName = img.FileName })" target="_blank" rel="noopener">
+                        <img src="@Url.Action("Media", "ProductImages", new { productId = img.ProductId, fileName = img.ThumbFileName })"
+                             alt="@img.OriginalFileName" loading="lazy"
+                             style="max-width:160px;max-height:160px;border-radius:8px;display:block" />
+                    </a>
+                    <form asp-controller="ProductImages" asp-action="Delete"
+                          asp-route-productId="@img.ProductId" asp-route-imageId="@img.ProductImageId" method="post">
+                        <input type="hidden" name="returnUrl" value="@returnUrl" />
+                        <button class="btn btn-light btn-sm" type="submit" style="margin-top:.25rem">Remove</button>
+                    </form>
+                </div>
+            }
+        </div>
+    }
+
+    <form asp-controller="ProductImages" asp-action="Upload" asp-route-productId="@Model.ProductId"
+          method="post" enctype="multipart/form-data">
+        <input type="hidden" name="returnUrl" value="@returnUrl" />
+        <input class="form-control" type="file" name="files" multiple required
+               accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" style="margin-bottom:.5rem" />
+        <button class="btn btn-primary" type="submit">Upload</button>
+    </form>
+</div>
+
 @section Scripts { <partial name="_ValidationScriptsPartial" /> }

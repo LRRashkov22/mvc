@@ -12,7 +12,7 @@ public sealed class ProductRepository : IProductRepository
 
     public async Task<IReadOnlyList<Product>> GetAllAsync(int? categoryId = null, string? search = null, CancellationToken ct = default)
     {
-        var query = _db.Products.AsNoTracking().AsQueryable();
+        var query = _db.Products.AsNoTracking().Include(p => p.Images).AsQueryable();
         if (categoryId.HasValue) query = query.Where(p => p.CategoryId == categoryId.Value);
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -23,7 +23,7 @@ public sealed class ProductRepository : IProductRepository
     }
 
     public Task<Product?> GetByIdAsync(int id, CancellationToken ct = default) =>
-        _db.Products.AsNoTracking().FirstOrDefaultAsync(p => p.ProductId == id, ct);
+        _db.Products.AsNoTracking().Include(p => p.Images).FirstOrDefaultAsync(p => p.ProductId == id, ct);
 
     public Task<Product?> GetTrackedByIdAsync(int id, CancellationToken ct = default) =>
         _db.Products.FirstOrDefaultAsync(p => p.ProductId == id, ct);

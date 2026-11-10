@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1;
 using WebApplication1.Data;
+using WebApplication1.Services;
 using WebApplication1.Services.Implementations;
 using WebApplication1.Services.Contracts;
 using Scalar.AspNetCore;
@@ -35,10 +36,15 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
+// File upload settings (appsettings.json -> "FileStorage")
+builder.Services.Configure<FileStorageOptions>(builder.Configuration.GetSection("FileStorage"));
+builder.Services.AddSingleton<IFileStorageService, FileStorageService>();
+
 // Register application services for dependency injection
 builder.Services.AddScoped<ICategoriesService, CategoriesService>();
 builder.Services.AddScoped<IDeliveriesService, DeliveriesService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductImageService, ProductImageService>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -48,6 +54,7 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IDeliveryRepository, DeliveryRepository>();
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductImageRepository, ProductImageRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>();
 
