@@ -17,6 +17,7 @@
         <div class="nav-label">WORKSPACE</div>
         <nav class="side-nav">
             <a asp-controller="Home" asp-action="Index"><span>◫</span> Overview</a>
+            @if (User.IsInRole("Admin")) { <a asp-controller="Reports" asp-action="Index"><span>▥</span> Reports</a> }
             <a asp-controller="Categories" asp-action="Index"><span>▤</span> Categories</a>
             <a asp-controller="WarehousePages" asp-action="Index"><span>⌂</span> Warehouses</a>
             <a asp-controller="ProductPages" asp-action="Index"><span>◇</span> Products</a>

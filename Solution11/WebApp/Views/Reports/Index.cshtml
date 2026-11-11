@@ -1,0 +1,149 @@
+@using System.Text.Json
+@model WebApplication1.Models.Reports.DashboardReportDto
+
+@{
+    ViewData["Title"] = "Reports & Analytics";
+    var monthlyLabels = Model.MonthlyDeliveries.Select(x => x.Label).ToArray();
+    var monthlyCounts = Model.MonthlyDeliveries.Select(x => x.DeliveryCount).ToArray();
+    var monthlyQuantities = Model.MonthlyDeliveries.Select(x => x.Quantity).ToArray();
+    var warehouseLabels = Model.WarehouseStocks.Select(x => x.WarehouseName).ToArray();
+    var warehouseUnits = Model.WarehouseStocks.Select(x => x.TotalUnits).ToArray();
+    var productLabels = Model.TopProducts.Select(x => x.ProductName).ToArray();
+    var productQuantities = Model.TopProducts.Select(x => x.DeliveredQuantity).ToArray();
+}
+
+<div class="page-heading">
+    <div>
+        <h1>Reports & Analytics</h1>
+        <p>Warehouse activity, deliveries and current stock valuation.</p>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+        <a class="btn btn-light"
+           asp-action="ExportPdf"
+           asp-route-from="@Model.From.ToString("yyyy-MM-dd")"
+           asp-route-to="@Model.To.ToString("yyyy-MM-dd")">Export PDF</a>
+        <a class="btn btn-primary"
+           asp-action="ExportExcel"
+           asp-route-from="@Model.From.ToString("yyyy-MM-dd")"
+           asp-route-to="@Model.To.ToString("yyyy-MM-dd")">Export Excel</a>
+    </div>
+</div>
+
+<form method="get" asp-action="Index" class="filter-bar align-items-end">
+    <div>
+        <label for="from" class="form-label">From</label>
+        <input id="from" name="from" type="date" class="form-control"
+               value="@Model.From.ToString("yyyy-MM-dd")" />
+    </div>
+    <div>
+        <label for="to" class="form-label">To</label>
+        <input id="to" name="to" type="date" class="form-control"
+               value="@Model.To.ToString("yyyy-MM-dd")" />
+    </div>
+    <button type="submit" class="btn btn-primary">Apply period</button>
+</form>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<div class="stat-grid">
+    <div class="stat-card">
+        <div class="stat-top">Deliveries in period</div>
+        <div class="stat-number">@Model.TotalDeliveries.ToString("N0")</div>
+        <div class="stat-foot">Recorded delivery transactions</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-top">Delivered units</div>
+        <div class="stat-number">@Model.TotalDeliveredUnits.ToString("N0")</div>
+        <div class="stat-foot">Units received in selected period</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-top">Current stock</div>
+        <div class="stat-number">@Model.TotalStockUnits.ToString("N0")</div>
+        <div class="stat-foot">Units across all warehouses</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-top">Stock value</div>
+        <div class="stat-number">@Model.TotalStockValue.ToString("N2")</div>
+        <div class="stat-foot">Current quantity × product price</div>
+    </div>
+</div>
+
+<div class="dashboard-grid mt-4">
+    <section class="panel">
+        <div class="panel-head"><h2>Deliveries per month</h2></div>
+        <div class="panel-body"><canvas id="deliveriesChart" height="120"></canvas></div>
+    </section>
+    <section class="panel">
+        <div class="panel-head"><h2>Delivered units per month</h2></div>
+        <div class="panel-body"><canvas id="quantitiesChart" height="120"></canvas></div>
+    </section>
+    <section class="panel">
+        <div class="panel-head"><h2>Top delivered products</h2></div>
+        <div class="panel-body"><canvas id="productsChart" height="150"></canvas></div>
+    </section>
+    <section class="panel">
+        <div class="panel-head"><h2>Stock by warehouse</h2></div>
+        <div class="panel-body"><canvas id="warehousesChart" height="150"></canvas></div>
+    </section>
+</div>
+
+<div class="panel mt-4">
+    <div class="panel-head"><h2>Warehouse stock details</h2></div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead><tr><th>Warehouse</th><th>Products</th><th>Stock units</th><th>Stock value</th></tr></thead>
+            <tbody>
+            @foreach (var item in Model.WarehouseStocks)
+            {
+                <tr>
+                    <td class="primary-text">@item.WarehouseName</td>
+                    <td>@item.ProductCount</td>
+                    <td>@item.TotalUnits.ToString("N0")</td>
+                    <td>@item.StockValue.ToString("N2")</td>
+                </tr>
+            }
+            @if (Model.WarehouseStocks.Count == 0)
+            {
+                <tr><td colspan="4">No stock records found.</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const monthlyLabels = @Html.Raw(JsonSerializer.Serialize(monthlyLabels));
+        const monthlyCounts = @Html.Raw(JsonSerializer.Serialize(monthlyCounts));
+        const monthlyQuantities = @Html.Raw(JsonSerializer.Serialize(monthlyQuantities));
+        const warehouseLabels = @Html.Raw(JsonSerializer.Serialize(warehouseLabels));
+        const warehouseUnits = @Html.Raw(JsonSerializer.Serialize(warehouseUnits));
+        const productLabels = @Html.Raw(JsonSerializer.Serialize(productLabels));
+        const productQuantities = @Html.Raw(JsonSerializer.Serialize(productQuantities));
+
+        new Chart(document.getElementById('deliveriesChart'), {
+            type: 'line',
+            data: { labels: monthlyLabels, datasets: [{ label: 'Deliveries', data: monthlyCounts, tension: 0.25 }] },
+            options: { responsive: true, maintainAspectRatio: true }
+        });
+
+        new Chart(document.getElementById('quantitiesChart'), {
+            type: 'bar',
+            data: { labels: monthlyLabels, datasets: [{ label: 'Delivered units', data: monthlyQuantities }] },
+            options: { responsive: true, maintainAspectRatio: true }
+        });
+
+        new Chart(document.getElementById('productsChart'), {
+            type: 'bar',
+            data: { labels: productLabels, datasets: [{ label: 'Delivered quantity', data: productQuantities }] },
+            options: { indexAxis: 'y', responsive: true, maintainAspectRatio: true }
+        });
+
+        new Chart(document.getElementById('warehousesChart'), {
+            type: 'bar',
+            data: { labels: warehouseLabels, datasets: [{ label: 'Stock units', data: warehouseUnits }] },
+            options: { responsive: true, maintainAspectRatio: true }
+        });
+    </script>
+}

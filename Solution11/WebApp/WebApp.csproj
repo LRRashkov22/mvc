@@ -20,6 +20,8 @@
       <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0" />
       <PackageReference Include="Serilog.Sinks.File" Version="8.0.0-nblumhardt-02322" />
       <PackageReference Include="SixLabors.ImageSharp" Version="4.1.3" />
+      <PackageReference Include="ClosedXML" Version="0.105.0" />
+      <PackageReference Include="QuestPDF" Version="2025.7.4" />
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.23.0" />
     </ItemGroup>
 
