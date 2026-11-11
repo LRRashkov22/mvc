@@ -12,10 +12,10 @@ using WebApplication1.Repositories.Contracts;
 using QuestPDF.Infrastructure;
 using WebApplication1.Models;
 
-var builder = WebApplication.CreateBuilder(args);
+using Serilog;
+using WebApplication1.Middleware;
 
-// Add MVC services
-builder.Services.AddControllersWithViews();
+var builder = WebApplication.CreateBuilder(args);
 
 // Register the database context using SQLite
 builder.Services.AddDbContext<WarehouseDbContext>(options =>
@@ -73,6 +73,23 @@ builder.Services.AddCors(options =>
 });
 
 QuestPDF.Settings.License = LicenseType.Community;
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.Console()
+    .WriteTo.File(
+        "Logs/log-.txt",
+        rollingInterval: RollingInterval.Day,
+        retainedFileCountLimit: 30,
+        shared: true)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
+// Existing services
+builder.Services.AddControllersWithViews();
+
+// Keep your existing DbContext and service registrations here.
 
 var app = builder.Build();
   
@@ -113,6 +130,15 @@ using (var scope = app.Services.CreateScope())
         await db.SaveChangesAsync();
     }
 }
+
+// Global exception handling
+app.UseExceptionHandler("/Error/500");
+
+// Log unhandled exceptions
+app.UseMiddleware<ExceptionLoggingMiddleware>();
+
+// Custom status code pages (404, etc.)
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
 app.UseCors("frontend");
 

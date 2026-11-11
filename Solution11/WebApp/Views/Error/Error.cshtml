@@ -1,0 +1,17 @@
+@{
+    ViewData["Title"] = "An Error Occurred";
+}
+
+<div class="container text-center mt-5">
+    <h1 class="display-1 text-danger">
+        @Context.Response.StatusCode
+    </h1>
+
+    <h2>An unexpected error occurred.</h2>
+
+    <a asp-controller="Home"
+       asp-action="Index"
+       class="btn btn-primary mt-3">
+        Back to Home
+    </a>
+</div>
