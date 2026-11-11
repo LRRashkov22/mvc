@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1;
 using WebApplication1.Data;
@@ -9,6 +10,7 @@ using Scalar.AspNetCore;
 using WebApplication1.Repositories.Implementations;
 using WebApplication1.Repositories.Contracts;
 using QuestPDF.Infrastructure;
+using WebApplication1.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -73,6 +75,44 @@ builder.Services.AddCors(options =>
 QuestPDF.Settings.License = LicenseType.Community;
 
 var app = builder.Build();
+  
+// Apply migrations and seed the initial Admin account.
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<WarehouseDbContext>();
+    var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+    await db.Database.MigrateAsync();
+
+    const string adminUsername = "Admin";
+
+    var adminPassword = "admin";
+
+    if (string.IsNullOrWhiteSpace(adminPassword))
+    {
+        throw new InvalidOperationException(
+            "SeedAdmin:Password is not configured.");
+    }
+
+    var adminExists = await db.User
+        .AnyAsync(u => u.Username == adminUsername);
+
+    if (!adminExists)
+    {
+        var admin = new User
+        {
+            Username = adminUsername,
+            Role = "Admin"
+        };
+
+        admin.PasswordHash = new PasswordHasher<User>()
+            .HashPassword(admin, adminPassword);
+
+        db.User.Add(admin);
+
+        await db.SaveChangesAsync();
+    }
+}
 
 app.UseCors("frontend");
 

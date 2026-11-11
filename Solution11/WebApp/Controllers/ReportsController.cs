@@ -13,10 +13,7 @@ public sealed class ReportsController : Controller
     public ReportsController(IReportsService reports) => _reports = reports;
 
     [HttpGet("")]
-    public async Task<IActionResult> Index(
-        DateOnly? from,
-        DateOnly? to,
-        CancellationToken ct)
+    public async Task<IActionResult> Index( DateOnly? from, DateOnly? to, CancellationToken ct)
     {
         var today = DateOnly.FromDateTime(DateTime.Today);
         var start = from ?? new DateOnly(today.Year, 1, 1);
@@ -35,10 +32,7 @@ public sealed class ReportsController : Controller
     }
 
     [HttpGet("export/pdf")]
-    public async Task<IActionResult> ExportPdf(
-        DateOnly from,
-        DateOnly to,
-        CancellationToken ct)
+    public async Task<IActionResult> ExportPdf( DateOnly from, DateOnly to, CancellationToken ct)
     {
         try
         {
