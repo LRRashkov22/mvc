@@ -9,6 +9,7 @@ using WebApplication1.Services.Contracts;
 using Scalar.AspNetCore;
 using WebApplication1.Repositories.Implementations;
 using WebApplication1.Repositories.Contracts;
+using WebApplication1.Services.Implementations.ReportExport;
 using QuestPDF.Infrastructure;
 using WebApplication1.Models;
 
@@ -48,6 +49,9 @@ builder.Services.AddScoped<ICategoriesService, CategoriesService>();
 builder.Services.AddScoped<IDeliveriesService, DeliveriesService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IReportsService, ReportsService>();
+builder.Services.AddScoped<IReportExportStrategy, PdfReportExportStrategy>();
+builder.Services.AddScoped<IReportExportStrategy, ExcelReportExportStrategy>();
+builder.Services.AddScoped<ReportExportStrategyFactory>();
 builder.Services.AddScoped<IProductImageService, ProductImageService>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();
